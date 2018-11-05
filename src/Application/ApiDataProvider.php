@@ -42,4 +42,13 @@ class ApiDataProvider
     {
         return json_decode($this->client->get(self::ITEMS_RESOURCE_URL . '/' . $id)->getBody(), true);
     }
+
+    /**
+     * @param int $id
+     * @return array
+     */
+    public function remove(int $id): array
+    {
+        return json_decode($this->client->delete(self::ITEMS_RESOURCE_URL . '/' . $id)->getBody(), true);
+    }
 }
