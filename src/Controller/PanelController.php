@@ -33,12 +33,58 @@ class PanelController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return View
      */
-    public function index(): View
+    public function index(Request $request): View
     {
         $items = $this->apiDataProvider->findAllItems();
-        return view('blue::panel', compact('items'));
+        $result = [];
+
+        if ((bool)$request->out_of_stock && ((bool)$request->in_stock || (bool)$request->more_than_five)) {
+            $request->session()->flash('warning', 'Not proper combination of filters!');
+            $result = [];
+            return view('blue::panel', [
+                'result' => $result,
+                'outOfStockCheck' => (bool)$request->get('out_of_stock'),
+                'inStockCheck' => (bool)$request->get('in_stock'),
+                'moreThanFiveCheck' => (bool)$request->get('more_than_five')
+            ]);
+        }
+
+        if ((bool)$request->out_of_stock) {
+            foreach ($items as $item) {
+                if ($item['amount'] == 0) {
+                    $result[] = $item;
+                }
+            }
+        } else {
+            $result = $items;
+
+            if ((bool)$request->in_stock) {
+                foreach ($result as $key => $item) {
+                    if ($item['amount'] < 1) {
+                        unset($result[$key]);
+                    }
+                }
+            }
+
+            if ((bool)$request->more_than_five) {
+                foreach ($result as $key => $item) {
+                    if ($item['amount'] < 5) {
+                        unset($result[$key]);
+                    }
+                }
+            }
+        }
+
+
+        return view('blue::panel', [
+            'result' => $result,
+            'outOfStockCheck' => (bool)$request->get('out_of_stock'),
+            'inStockCheck' => (bool)$request->get('in_stock'),
+            'moreThanFiveCheck' => (bool)$request->get('more_than_five')
+        ]);
     }
 
     /**
