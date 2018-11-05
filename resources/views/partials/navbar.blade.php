@@ -7,10 +7,10 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            <li class="nav-item @if(Request::url() == route('panel')) active @endif">
                 <a class="nav-link" href="{{route('panel')}}">Home</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item @if(Request::url() == route('panel-item-create'))active @endif">
                 <a class="nav-link" href="{{route('panel-item-create')}}">Create</a>
             </li>
         </ul>
