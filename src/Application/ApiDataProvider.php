@@ -5,7 +5,6 @@ namespace BlueClient\Application;
 use BlueClient\Application\Exception\ItemNotFoundException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use Illuminate\Http\Response;
 
 /**
  * Class ApiDataProvider
@@ -45,7 +44,7 @@ class ApiDataProvider
      */
     public function findItemById(int $id): array
     {
-        return json_decode($this->client->get(self::ITEMS_RESOURCE_URL . '/' . $id)->getBody(), true);
+        return json_decode($this->client->get(self::ITEMS_RESOURCE_URL . self::DIRECTORY_SEPARATOR . $id)->getBody(), true);
     }
 
     /**

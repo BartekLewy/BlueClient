@@ -17,7 +17,8 @@
                         <td>{{$item['name']}}</td>
                         <td class="text-right">{{$item['amount']}}</td>
                         <td class="text-right">
-                            <a href="#" class="btn btn-sm btn-primary">Edit</a>
+                            <a href="{{route('panel-item-edit', ['id' => $item['id']])}}"
+                               class="btn btn-sm btn-primary">Edit</a>
                             <a href="{{route('panel-item-remove', ['id' => $item['id']])}}"
                                class="btn btn-sm btn-danger">Remove
                             </a>

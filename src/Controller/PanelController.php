@@ -39,6 +39,34 @@ class PanelController extends Controller
     }
 
     /**
+     * @return View
+     */
+    public function create(): View
+    {
+        return view('blue::form');
+    }
+
+    /**
+     * @param Request $request
+     * @return View
+     */
+    public function edit(Request $request): View
+    {
+        $item = $this->apiDataProvider->findItemById($request->id);
+        return view('blue::form', compact('item'));
+    }
+
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function save(Request $request): RedirectResponse
+    {
+        $request->session()->flash('success', 'That was updated');
+        return redirect()->route('panel');
+    }
+
+    /**
      * @param Request $request
      * @return RedirectResponse
      */
