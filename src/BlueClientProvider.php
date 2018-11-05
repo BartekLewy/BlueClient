@@ -5,7 +5,6 @@ namespace BlueClient;
 use BlueClient\Application\ApiDataProvider;
 use BlueClient\Application\ClientFactory;
 use BlueClient\Controller\PanelController;
-use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -18,7 +17,6 @@ class BlueClientProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__ . '/../routes.php');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'blue');
-        $this->publishes([__DIR__ . '/../node_modules' => public_path('vendor/blue')], 'public');
         $this->publishes([__DIR__ . '/../config/blueclient.php' => config_path('blueconfig.php')]);
     }
 

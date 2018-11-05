@@ -2,7 +2,10 @@
 
 namespace BlueClient\Application;
 
+use BlueClient\Application\Exception\ItemNotFoundException;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use Illuminate\Http\Response;
 
 /**
  * Class ApiDataProvider
@@ -11,6 +14,8 @@ use GuzzleHttp\Client;
 class ApiDataProvider
 {
     private const ITEMS_RESOURCE_URL = 'items';
+
+    private const DIRECTORY_SEPARATOR = '/';
 
     /**
      * @var Client
@@ -49,6 +54,14 @@ class ApiDataProvider
      */
     public function remove(int $id): array
     {
-        return json_decode($this->client->delete(self::ITEMS_RESOURCE_URL . '/' . $id)->getBody(), true);
+        try {
+            $response = $this->client->delete(self::ITEMS_RESOURCE_URL . self::DIRECTORY_SEPARATOR . $id);
+        } catch (ClientException $exception) {
+            if ($exception->getCode() == 404) {
+                throw new ItemNotFoundException();
+            }
+        }
+
+        return json_decode($response->getBody(), true);
     }
 }

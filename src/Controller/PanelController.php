@@ -4,9 +4,9 @@ namespace BlueClient\Controller;
 
 use App\Http\Controllers\Controller;
 use BlueClient\Application\ApiDataProvider;
-use Illuminate\Http\JsonResponse;
+use BlueClient\Application\Exception\ItemNotFoundException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
 use Illuminate\View\View;
 
 /**
@@ -30,7 +30,7 @@ class PanelController extends Controller
     }
 
     /**
-     * @return Response
+     * @return View
      */
     public function index(): View
     {
@@ -38,10 +38,19 @@ class PanelController extends Controller
         return view('blue::panel', compact('items'));
     }
 
-    public function remove(Request $request): JsonResponse
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function remove(Request $request): RedirectResponse
     {
-        if ($request->isXmlHttpRequest()) {
-           return new JsonResponse($this->apiDataProvider->remove($request->id));
+        try {
+            $response = $this->apiDataProvider->remove($request->id);
+            $request->session()->flash('success', $response['message']);
+        } catch (ItemNotFoundException $exception) {
+            $request->session()->flash('error', $exception->getMessage());
         }
+
+        return redirect()->route('panel');
     }
 }
